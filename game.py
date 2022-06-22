@@ -17,7 +17,7 @@ class Gra:
         |1. Graj                                         |
         |2. Wybierz postac                               |
         |3. Samouczek                                    |  
-        |                                                |
+        |4. Ekwipunek                                    |
         |                                                |
         |                                                |
         |                                                |
@@ -36,6 +36,10 @@ class Gra:
         elif user_choice == 3:
             os.system('cls')
             print("Gra polega na niszczeniu potworow, aby zlikwidowac potwora nalezy na niego najechac.\nAby opuscic gre nasisnij ESC.\n")
+            self.menu()
+        elif user_choice == 4:
+            os.system('cls')
+            print("Ekwipunek")
             self.menu()
     def game_board(self):
         os.system('cls')
