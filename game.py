@@ -7,8 +7,14 @@ class Gra:
     def __init__(self):
         self.monsters = ["👾", "👻", "🤖", "🐙", "🐉"]
         self.character = "🔪"
-        self.speed = 0.1
+        self.speed = 0.2
         self.x , self.y = 20, 10
+        self.score_of_game = 0
+        self.position_x = 1
+        self.position_y = 0
+        self.create_board()
+
+    def create_board(self):
         self.board = {i:["  " for _ in range(1, self.x + 1)] for i in range(1, self.y + 1)}
         for i in range(2, self.x - 1):
             self.board[random.randint(1, self.y)][i] = random.choice(self.monsters)
@@ -22,7 +28,7 @@ class Gra:
         |4. Ekwipunek                                    |
         |5. Test komend                                  |
         |6. Wybiersz predkosc poruszania sie             |
-        |                                                |
+        |7. Wybierz wielkosc planszy                     |
         |                                                |
         |                                                |
         O================================================O
@@ -55,53 +61,67 @@ class Gra:
         elif user_choice == 6:
             self.speed = float(input("Wpisz predkosc (Np. 0.02s): "))
             self.menu()
+        elif user_choice == 7:
+            self.x = int(input("Wpisz wielkosc planszy (Np. 20): "))
+            self.y = int(input("Wpisz wielkosc planszy (Np. 10): "))
+            self.create_board()
+            self.menu()
+
+    def score(self):
+        if self.board[self.position_x][self.position_y] in self.monsters:
+            self.score_of_game += 1
+        if self.score_of_game == self.x - 3:
+            os.system('cls')
+            print("Wygrales!")
+            time.sleep(2)
+            self.menu()
+            
 
     def game_board(self):
         os.system('cls')
+        print(f"Aktualny wynik: {self.score_of_game}")
         print(f"O{'=' * (2 *(len(self.board[1]) + 1))}O")
         for i in self.board:    
             print(f"| {''.join(self.board[i])} |")
         print(f"O{'=' * (2 *(len(self.board[1]) + 1))}O")
 
-    def start(self):
-        position_x = 10
-        position_y = 5
+    def move(self, position, char):
+        time.sleep(self.speed)
+        self.board[self.position_x][self.position_y] = "  "
+        if char == "-" and position == "x":
+            self.position_x -= 1
+        elif char == "+" and position == "x":
+            self.position_x += 1
+        elif char == "-" and position == "y":
+            self.position_y -= 1
+        else:
+            self.position_y += 1
+        self.score()   
+        self.board[self.position_x][self.position_y] = self.character
         self.game_board()
-        self.board[position_x][position_y] = self.character
+
+
+    def start(self):
+        self.game_board()
+        self.board[self.position_x][self.position_y] = self.character
         self.game_board()
 
         while True:
 
-            if keyboard.is_pressed("w") and position_x != 1:
-                time.sleep(self.speed)
-                self.board[position_x][position_y] = "  "
-                position_x -= 1
-                self.board[position_x][position_y] = self.character
-                self.game_board()
+            if keyboard.is_pressed("w") and self.position_x != 1:
+                self.move("x", "-")
 
-            elif keyboard.is_pressed("s") and position_x != self.y:
-                time.sleep(self.speed)
-                self.board[position_x][position_y] = "  "
-                position_x += 1
-                self.board[position_x][position_y] = self.character
-                self.game_board()
+            elif keyboard.is_pressed("s") and self.position_x != self.y:
+                self.move("x", "+")
 
-            elif keyboard.is_pressed("a") and position_y != 0:
-                time.sleep(self.speed / 2)
-                self.board[position_x][position_y] = "  "
-                position_y -= 1
-                self.board[position_x][position_y] = self.character
-                self.game_board()
+            elif keyboard.is_pressed("a") and self.position_y != 0:
+                self.move("y", "-")
 
-            elif keyboard.is_pressed("d") and position_y != self.x - 1:
-                time.sleep((self.speed / 2))
-                self.board[position_x][position_y] = "  "
-                position_y += 1
-                self.board[position_x][position_y] = self.character
-                self.game_board()
+            elif keyboard.is_pressed("d") and self.position_y != self.x - 1:
+                self.move("y", "+")
 
             elif keyboard.is_pressed("esc"):
-                self.board[position_x][position_y] = "  "
+                self.board[self.position_x][self.position_y] = "  "
                 os.system('cls')
                 self.menu()
                 
