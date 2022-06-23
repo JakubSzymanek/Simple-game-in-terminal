@@ -3,6 +3,11 @@ import random
 import keyboard
 import os
 
+
+
+
+
+
 class Gra:
     def __init__(self):
         self.monsters = ["👾", "👻", "🤖", "🐙", "🐉"]
