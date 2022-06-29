@@ -7,6 +7,9 @@ class Gra:
     def __init__(self):
         self.obstacles = ["🌲", "🌳", "🌵"]
         self.monsters = ["👾", "👻","🐙", "🐉"]
+        self.mystery_box = ["🎁", "💰", "💎"]
+        self.items = ["⚡"] 
+        self.eq = []
         self.character = "🔪"
         self.speed = 0.2
         self.x , self.y = 20, 10
@@ -18,10 +21,14 @@ class Gra:
         for i in range(2, self.x - 1):
             self.board[random.randint(1, self.y)][i] = random.choice(self.obstacles)
             self.board[random.randint(1, self.y)][i] = random.choice(self.monsters)
+        if random.randint(1, 2) == 1:
+            self.board[random.randint(1, self.y)][random.randint(1, self.x)] = random.choice(self.mystery_box)
         self.menu()
+
     
     def menu(self):
-        list_of_choices = ["Graj", "Wybierz postac", "Samouczek", "Ekwipunek", "Test komend", "Wybiersz predkosc poruszania sie", "Wybierz wielkosc planszy"]
+        list_of_choices = ["Graj","Wybierz postac","Samouczek","Ekwipunek","Test komend",
+        "Wybiersz predkosc poruszania sie","Wybierz wielkosc planszy"]
         print(f"O{'=' * 60}O")
         for i in list_of_choices:
             print(f"| {list_of_choices.index(i) + 1}. {i}{' ' * (56 - len(i))}|")
@@ -45,6 +52,7 @@ class Gra:
         elif user_choice == 4:
             os.system('cls')
             print("Ekwipunek")
+            print(self.items)
             self.menu()
 
         elif user_choice == 5:
@@ -63,6 +71,10 @@ class Gra:
     def score(self):
         if self.board[self.position_x][self.position_y] in self.monsters:
             self.score_of_game += 1
+        elif self.board[self.position_x][self.position_y] in self.mystery_box:
+            self.score_of_game += 10
+            self.eq.append(random.choice(self.items))
+            self.board[random.randint(1, self.y)][random.randint(1, self.x)] = random.choice(self.mystery_box)
         if self.score_of_game == self.x - 3:
             os.system('cls')
             print("Wygrales!")
