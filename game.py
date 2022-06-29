@@ -21,19 +21,11 @@ class Gra:
         self.menu()
     
     def menu(self):
-        print(f""" 
-        O================================================O
-        |1. Graj                                         |
-        |2. Wybierz postac                               |
-        |3. Samouczek                                    |  
-        |4. Ekwipunek                                    |
-        |5. Test komend                                  |
-        |6. Wybiersz predkosc poruszania sie             |
-        |7. Wybierz wielkosc planszy                     |
-        |                                                |
-        |                                                |
-        O================================================O
-        """)
+        list_of_choices = ["Graj", "Wybierz postac", "Samouczek", "Ekwipunek", "Test komend", "Wybiersz predkosc poruszania sie", "Wybierz wielkosc planszy"]
+        print(f"O{'=' * 60}O")
+        for i in list_of_choices:
+            print(f"| {list_of_choices.index(i) + 1}. {i}{' ' * (56 - len(i))}|")
+        print(f"O{'=' * 60}O")
         user_choice = int(input("Wybierz opcje: "))
 
         if user_choice == 1:
