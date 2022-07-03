@@ -8,32 +8,40 @@ class Gra:
         self.obstacles = ["🌲", "🌳", "🌵"]
         self.monsters = ["👾", "👻","🐙", "🐉"]
         self.mystery_box = ["🎁", "💰", "💎"]
-        self.items = ["⚡"] 
+        self.items = ["⚡", "🔥"]
         self.eq = []
+        self.the_best_score = open("equipment.txt", "r").readline(1)
         self.character = "🔪"
         self.speed = 0.2
         self.x , self.y = 20, 10
+        self.win = self.x
         self.score_of_game = 0
         self.create_board()
 
     def create_board(self):
         self.board = {i:["  " for _ in range(1, self.x + 1)] for i in range(1, self.y + 1)}
+        if random.randint(1, 2) == 1:
+            self.board[random.randint(1, self.y - 1)][random.randint(1, self.x - 1)] = random.choice(self.mystery_box)
         for i in range(2, self.x - 1):
             self.board[random.randint(1, self.y)][i] = random.choice(self.obstacles)
             self.board[random.randint(1, self.y)][i] = random.choice(self.monsters)
-        if random.randint(1, 2) == 1:
-            self.board[random.randint(1, self.y)][random.randint(1, self.x)] = random.choice(self.mystery_box)
+
         self.menu()
 
     
     def menu(self):
+        os.system("cls")
         list_of_choices = ["Graj","Wybierz postac","Samouczek","Ekwipunek","Test komend",
         "Wybiersz predkosc poruszania sie","Wybierz wielkosc planszy"]
         print(f"O{'=' * 60}O")
         for i in list_of_choices:
             print(f"| {list_of_choices.index(i) + 1}. {i}{' ' * (56 - len(i))}|")
         print(f"O{'=' * 60}O")
-        user_choice = int(input("Wybierz opcje: "))
+        try:
+            user_choice = int(input("Wybierz opcje: "))
+        except:
+            print("Nie wybrales opcji!")
+            self.menu()
 
         if user_choice == 1:
             self.start()
@@ -62,10 +70,15 @@ class Gra:
         elif user_choice == 6:
             self.speed = float(input("Wpisz predkosc (Np. 0.02s): "))
             self.menu()
+
         elif user_choice == 7:
             self.x = int(input("Wpisz wielkosc planszy (Np. 20): "))
             self.y = int(input("Wpisz wielkosc planszy (Np. 10): "))
+            self.win = self.x
             self.create_board()
+            self.menu()
+        else:
+            print("Nie wybrales opcji!")
             self.menu()
 
     def score(self):
@@ -73,9 +86,15 @@ class Gra:
             self.score_of_game += 1
         elif self.board[self.position_x][self.position_y] in self.mystery_box:
             self.score_of_game += 10
+            self.win += 10
             self.eq.append(random.choice(self.items))
-            self.board[random.randint(1, self.y)][random.randint(1, self.x)] = random.choice(self.mystery_box)
-        if self.score_of_game == self.x - 3:
+            a = random.randint(1, self.y - 1)
+            b = random.randint(1, self.x - 1)
+            print(self.board[a][b])
+            if self.board[a][b] == " ":
+                self.board[a][b] = random.choice(self.mystery_box)
+        if self.score_of_game == self.win - 3:
+            self.win = self.x
             os.system('cls')
             print("Wygrales!")
             self.score_of_game = 0
@@ -86,6 +105,7 @@ class Gra:
 
     def game_board(self):
         os.system('cls')
+        print(f"Twoj najlepszy wynik to: {self.the_best_score}")
         print(f"Aktualny wynik: {self.score_of_game}")
         print(f"O{'=' * (2 *(len(self.board[1]) + 1))}O")
         for i in self.board:    
