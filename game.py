@@ -10,7 +10,7 @@ class Gra:
         self.mystery_box = ["🎁", "💰", "💎"]
         self.items = ["⚡", "🔥"]
         self.eq = []
-        self.the_best_score = open("equipment.txt", "r").readline(1)
+        self.the_best_score = open("equipment.txt", "r").readline()
         self.character = "🔪"
         self.speed = 0.2
         self.x , self.y = 20, 10
@@ -95,7 +95,10 @@ class Gra:
         if self.score_of_game == self.win - 3:
             self.win = self.x
             os.system('cls')
-            print("Wygrales!")
+            print(f"Wygrales!\nTwoj wynik to: {self.score_of_game}\nTwoj czas to: {round(time.time() - self.time_of_game)}s")
+            if self.score_of_game > int(open("equipment.txt", "r").readline()):
+                open("equipment.txt", "w").write(str(self.score_of_game))
+            self.the_best_score = open("equipment.txt", "r").readline()
             self.score_of_game = 0
             time.sleep(2)
             self.create_board()
@@ -104,7 +107,7 @@ class Gra:
 
     def game_board(self):
         os.system('cls')
-        stats = [f"Czas gry: {round(time.time() - self.time_of_game)}, (Odswiezany po ruchu)",
+        stats = [f"Czas gry: {round(time.time() - self.time_of_game)}s, (Odswiezany po ruchu)",
         f"Twoj najlepszy wynik to: {self.the_best_score}",
         f"Aktualny wynik: {self.score_of_game}"]
 
@@ -119,8 +122,6 @@ class Gra:
 
     def move(self):
         time.sleep(self.speed)
-        if self.board[self.position_x][self.position_y] in self.obstacles:
-            print("Przegrales!")
         self.score()   
         self.board[self.position_x][self.position_y] = self.character
         self.game_board()
