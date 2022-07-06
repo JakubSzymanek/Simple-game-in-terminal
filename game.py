@@ -90,8 +90,7 @@ class Gra:
             self.eq.append(random.choice(self.items))
             a = random.randint(1, self.y - 1)
             b = random.randint(1, self.x - 1)
-            print(self.board[a][b])
-            if self.board[a][b] == " ":
+            if self.board[a][b] == "  ":
                 self.board[a][b] = random.choice(self.mystery_box)
         if self.score_of_game == self.win - 3:
             self.win = self.x
@@ -105,9 +104,15 @@ class Gra:
 
     def game_board(self):
         os.system('cls')
-        print(f"Twoj najlepszy wynik to: {self.the_best_score}")
-        print(f"Aktualny wynik: {self.score_of_game}")
+        stats = [f"Czas gry: {round(time.time() - self.time_of_game)}, (Odswiezany po ruchu)",
+        f"Twoj najlepszy wynik to: {self.the_best_score}",
+        f"Aktualny wynik: {self.score_of_game}"]
+
         print(f"O{'=' * (2 *(len(self.board[1]) + 1))}O")
+        for i in stats:
+            print(f"| {i}{' ' * ((2 *(len(self.board[1]))) - len(i) + 1)}|")
+        print(f"O{'=' * (2 *(len(self.board[1]) + 1))}O")
+
         for i in self.board:    
             print(f"| {''.join(self.board[i])} |")
         print(f"O{'=' * (2 *(len(self.board[1]) + 1))}O")
@@ -122,6 +127,7 @@ class Gra:
 
 
     def start(self):
+        self.time_of_game = time.time()
         self.position_x = 1
         self.position_y = 0
         self.board[self.position_x][self.position_y] = self.character
