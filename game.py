@@ -16,9 +16,15 @@ class Gra:
         self.x , self.y = 20, 10
         self.win = self.x
         self.score_of_game = 0
-        self.create_board()
+        self.create_board("Easy")
 
-    def create_board(self):
+    def create_board(self, level):
+        if level == "Easy":
+            self.set_size(20, 10, 0.2)
+        elif level == "Medium":
+            self.set_size(40, 20, 0.1)
+        elif level == "Hard":
+            self.set_size(50, 25, 0.05)
         self.board = {i:["  " for _ in range(1, self.x + 1)] for i in range(1, self.y + 1)}
         if random.randint(1, 2) == 1:
             self.board[random.randint(1, self.y - 1)][random.randint(1, self.x - 1)] = random.choice(self.mystery_box)
@@ -28,15 +34,16 @@ class Gra:
 
         self.menu()
 
-    
+    def set_size(self, x, y, speed):
+        self.speed = speed
+        self.x = x
+        self.y = y
+        self.win = self.x
     def menu(self):
         os.system("cls")
         list_of_choices = ["Graj","Wybierz postac","Samouczek","Ekwipunek","Test komend",
-        "Wybiersz predkosc poruszania sie","Wybierz wielkosc planszy"]
-        print(f"O{'=' * 60}O")
-        for i in list_of_choices:
-            print(f"| {list_of_choices.index(i) + 1}. {i}{' ' * (56 - len(i))}|")
-        print(f"O{'=' * 60}O")
+        "Wybiersz predkosc poruszania sie","Wybierz wielkosc planszy", "Wybierz Poziom trudnosci"]
+        self.generate_table(list_of_choices)
         try:
             user_choice = int(input("Wybierz opcje: "))
         except:
@@ -75,11 +82,29 @@ class Gra:
             self.x = int(input("Wpisz wielkosc planszy (Np. 20): "))
             self.y = int(input("Wpisz wielkosc planszy (Np. 10): "))
             self.win = self.x
-            self.create_board()
+            self.create_board("Easy")
             self.menu()
+        elif user_choice == 8:
+            list_of_levels = ["Easy", "Medium", "Hard"]
+            self.generate_table(list_of_levels)
+            user_choice = int(input("Wybierz poziom trudnosci: "))
+            choices = {1: "Easy", 2: "Medium", 3: "Hard"}
+            self.create_board(choices[user_choice])
         else:
             print("Nie wybrales opcji!")
             self.menu()
+    def generate_table(self, list_of_choices, numerate_list = True):
+        if numerate_list:
+            print(f"O{'=' * 60}O")
+            for i in list_of_choices:
+                print(f"| {list_of_choices.index(i) + 1}. {i}{' ' * (56 - len(i))}|")
+            print(f"O{'=' * 60}O")
+        else:
+            print(f"O{'=' * 60}O")
+            for i in list_of_choices:
+                print(f"| {i}{' ' * (59 - len(i))}|")
+            print(f"O{'=' * 60}O")
+
 
     def score(self):
         if self.board[self.position_x][self.position_y] in self.monsters:
@@ -95,13 +120,13 @@ class Gra:
         if self.score_of_game == self.win - 3:
             self.win = self.x
             os.system('cls')
-            print(f"Wygrales!\nTwoj wynik to: {self.score_of_game}\nTwoj czas to: {round(time.time() - self.time_of_game)}s")
+            self.generate_table(["Wygrales!", f"Twoj wynik to: {self.score_of_game}", f"Twoj czas to: {round(time.time() - self.time_of_game)}s"], False)
             if self.score_of_game > int(open("equipment.txt", "r").readline()):
-                open("equipment.txt", "w").write(str(self.score_of_game))
+                open("equipment.txt", "w").write(f"{self.score_of_game}")
             self.the_best_score = open("equipment.txt", "r").readline()
             self.score_of_game = 0
             time.sleep(2)
-            self.create_board()
+            self.create_board("Easy")
             self.menu()
             
 
